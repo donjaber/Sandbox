@@ -37,12 +37,6 @@
         <fileset dir="${web.dir}/WEB-INF/lib">
             <include name="*.jar"/>
         </fileset>
-        <!-- We need the servlet API classes: -->
-        <!--  * for Tomcat 5/6 use servlet-api.jar -->
-        <!--  * for other app servers - check the docs -->
-        <fileset dir="${appserver.lib}">
-            <include name="servlet*.jar"/>
-        </fileset>
         <pathelement path="${build.dir}"/>
     </path>
 
@@ -74,6 +68,22 @@
         </javac>
     </target>
 
+	<target name="clean" description="Clean output directories">
+        <delete>
+            <fileset dir="${build.dir}">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+    </target>
+
+	<target name="undeploy" description="Un-Deploy application">
+        <delete>
+            <fileset dir="${deploy.path}/${name}">
+                <include name="**/*.*"/>
+            </fileset>
+        </delete>
+    </target>
+	
     <target name="deploy" depends="build" description="Deploy application">
         <copy todir="${deploy.path}/${name}" preservelastmodified="true">
             <fileset dir="${web.dir}">
@@ -161,4 +171,136 @@
 
 <!-- End Tomcat tasks -->
 
+	
+<!-- ============================================================== -->
+<!-- JUnit tasks												    -->
+<!-- ============================================================== -->
+	<property name="test.dir" value="test"/>
+	        
+    <target name="buildtests" description="Compile test tree java files">
+        <mkdir dir="${build.dir}"/>
+        <javac destdir="${build.dir}" source="1.5" target="1.5" debug="true"
+            deprecation="false" optimize="false" failonerror="true">
+            <src path="${test.dir}"/>
+            <classpath refid="master-classpath"/>
+        </javac>
+    </target>
+    
+    <target name="tests" depends="build, buildtests" description="Run tests">
+        <junit printsummary="on"
+            fork="false"
+            haltonfailure="false"
+            failureproperty="tests.failed"
+            showoutput="true">
+            <classpath refid="master-classpath"/>
+            <formatter type="brief" usefile="false"/>
+            
+            <batchtest>
+                <fileset dir="${build.dir}">
+                    <include name="**/*Tests.*"/>
+                </fileset>
+            </batchtest>
+            
+        </junit>
+        
+        <fail if="tests.failed">
+            tests.failed=${tests.failed}
+            ***********************************************************
+            ***********************************************************
+            ****  One or more tests failed!  Check the output ...  ****
+            ***********************************************************
+            ***********************************************************
+        </fail>
+    </target>
+	
+<!-- End JUnit tasks -->	
+	
+	
+	
+<!-- ============================================================== -->
+<!-- Database tasks												    -->
+<!-- ============================================================== -->	
+	
+	<target name="createTables">
+        <echo message="CREATE TABLES USING: ${db.driver} ${db.url}"/>
+        <sql driver="${db.driver}"
+             url="${db.url}"
+             userid="${db.user}"
+             password="${db.pw}"
+             onerror="continue"
+             src="db/create_tables.sql">  
+            <classpath refid="master-classpath"/>
+        </sql> 
+    </target>
+
+    <target name="dropTables">
+        <echo message="DROP TABLES USING: ${db.driver} ${db.url}"/>
+        <sql driver="${db.driver}"
+             url="${db.url}"
+             userid="${db.user}"
+             password="${db.pw}"
+             onerror="continue"
+        	 src="db/drop_tables.sql">  
+            <classpath refid="master-classpath"/>
+        </sql> 
+    </target>
+
+    <target name="loadData">
+        <echo message="LOAD DATA USING: ${db.driver} ${db.url}"/>
+        <sql driver="${db.driver}"
+             url="${db.url}"
+             userid="${db.user}"
+             password="${db.pw}"
+             onerror="continue"
+             src="db/load_data.sql">  
+            <classpath refid="master-classpath"/>
+        </sql> 
+    </target>
+
+    <target name="printData">
+        <echo message="PRINT DATA USING: ${db.driver} ${db.url}"/>
+        <sql driver="${db.driver}"
+             url="${db.url}"
+             userid="${db.user}"
+             password="${db.pw}"
+             onerror="continue"
+             print="true"
+        	 src="db/print_data.sql">  
+            <classpath refid="master-classpath"/>
+        </sql> 
+    </target>
+
+    <target name="clearData">
+        <echo message="CLEAR DATA USING: ${db.driver} ${db.url}"/>
+        <sql driver="${db.driver}"
+             url="${db.url}"
+             userid="${db.user}"
+             password="${db.pw}"
+             onerror="continue"
+        	 src="db/clear_data.sql">  
+            <classpath refid="master-classpath"/>
+        </sql> 
+    </target>
+
+	<target name="startupDb">
+        <echo message="STARTUP DATABASE USING: ${db.driver} ${db.url}"/>
+		<java classname="org.hsqldb.Server" fork="yes">
+         <arg value="-database test"/>
+		 <classpath refid="master-classpath"/>
+       </java>
+    </target>
+	
+    <target name="shutdownDb">
+        <echo message="SHUT DOWN DATABASE USING: ${db.driver} ${db.url}"/>
+        <sql driver="${db.driver}"
+             url="${db.url}"
+             userid="${db.user}"
+             password="${db.pw}"
+             onerror="continue"
+        	 src="db/shutdown_database.sql">  
+            <classpath refid="master-classpath"/>
+        </sql> 
+    </target>
+<!-- End Database tasks -->
+	
 </project>
