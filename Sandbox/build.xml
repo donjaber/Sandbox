@@ -1,13 +1,18 @@
 <?xml version="1.0"?>
 
-<project name="springapp" basedir="." default="usage" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project name="Sandbox" basedir="." default="usage" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <property file="build.properties"/>
 
     <property name="src.dir" value="src"/>
     <property name="web.dir" value="war"/>
     <property name="build.dir" value="${web.dir}/WEB-INF/classes"/>
-    <property name="name" value="springapp"/>
+    <property name="name" value="Sandbox"/>
 
+	<target name="_setup" depends="_start,db-create-tables,db-load-data,_deploy,tomcat-install-app,tomcat-start-app"/>
+	<target name="_start" depends="tomcat-start,tomcat-start-app,db-start"/>
+	<target name="_deploy" depends="app-deploy,tomcat-reload-app"/>
+	<target name="_stop" depends="tomcat-stop-app,tomcat-stop,db-stop"/>
+	<target name="_unsetup" depends="app-undeploy,db-drop-tables,_stop"/>
 	
 	<property name="maven-ant-task-jar" value="${web.dir}/WEB-INF/lib/maven-ant-tasks-2.1.3.jar"/>
 	<target name="lib-cleanup">
@@ -37,6 +42,12 @@
         <fileset dir="${web.dir}/WEB-INF/lib">
             <include name="*.jar"/>
         </fileset>
+    	<!-- We need the servlet API classes: -->
+        <!--  * for Tomcat 5/6 use servlet-api.jar -->
+        <!--  * for other app servers - check the docs -->
+        <fileset dir="${appserver.lib}">
+            <include name="servlet*.jar"/>
+        </fileset>
         <pathelement path="${build.dir}"/>
     </path>
 
@@ -58,7 +69,7 @@
         <echo message=""/>
     </target>
 
-    <target name="build" depends="lib-setup" description="Compile main source tree java files">
+    <target name="app-build" depends="lib-setup" description="Compile main source tree java files">
         
     	<mkdir dir="${build.dir}"/>
         <javac destdir="${build.dir}" source="1.5" target="1.5" debug="true"
@@ -68,7 +79,7 @@
         </javac>
     </target>
 
-	<target name="clean" description="Clean output directories">
+	<target name="app-clean" description="Clean output directories">
         <delete>
             <fileset dir="${build.dir}">
                 <include name="**/*.class"/>
@@ -76,7 +87,7 @@
         </delete>
     </target>
 
-	<target name="undeploy" description="Un-Deploy application">
+	<target name="app-undeploy" description="Un-Deploy application">
         <delete>
             <fileset dir="${deploy.path}/${name}">
                 <include name="**/*.*"/>
@@ -84,7 +95,7 @@
         </delete>
     </target>
 	
-    <target name="deploy" depends="build" description="Deploy application">
+    <target name="app-deploy" depends="app-build" description="Deploy application">
         <copy todir="${deploy.path}/${name}" preservelastmodified="true">
             <fileset dir="${web.dir}">
                 <include name="**/*.*"/>
@@ -92,7 +103,7 @@
         </copy>
     </target>
 
-    <target name="deploywar" depends="build" description="Deploy application as a WAR file">
+    <target name="app-deploywar" depends="app-build" description="Deploy application as a WAR file">
         <war destfile="${name}.war"
              webxml="${web.dir}/WEB-INF/web.xml">
             <fileset dir="${web.dir}">
@@ -134,7 +145,7 @@
         <classpath refid="catalina-ant-classpath"/>
     </taskdef>
 
-    <target name="install" description="Install application in Tomcat">
+    <target name="tomcat-install-app" description="Install application in Tomcat">
         <install url="${tomcat.manager.url}"
                  username="${tomcat.manager.username}"
                  password="${tomcat.manager.password}"
@@ -142,32 +153,55 @@
                  war="${name}"/>
     </target>
 
-    <target name="reload" description="Reload application in Tomcat">
+    <target name="tomcat-reload-app" description="Reload application in Tomcat">
         <reload url="${tomcat.manager.url}"
                  username="${tomcat.manager.username}"
                  password="${tomcat.manager.password}"
                  path="/${name}"/>
     </target>
 
-    <target name="start" description="Start Tomcat application">
+    <target name="tomcat-start-app" description="Start Tomcat application">
         <start url="${tomcat.manager.url}"
                  username="${tomcat.manager.username}"
                  password="${tomcat.manager.password}"
                  path="/${name}"/>
     </target>
 
-    <target name="stop" description="Stop Tomcat application">
+    <target name="tomcat-stop-app" description="Stop Tomcat application">
         <stop url="${tomcat.manager.url}"
                  username="${tomcat.manager.username}"
                  password="${tomcat.manager.password}"
                  path="/${name}"/>
     </target>
 
-    <target name="list" description="List Tomcat applications">
+    <target name="tomcat-list-apps" description="List Tomcat applications">
         <list url="${tomcat.manager.url}"
                  username="${tomcat.manager.username}"
                  password="${tomcat.manager.password}"/>
     </target>
+
+	<target name="tomcat-start">
+	    <java jar="${appserver.home}/bin/bootstrap.jar" fork="true">
+	        <jvmarg value="-Dcatalina.home=${appserver.home}"/>
+	    </java>
+	</target>
+
+	<target name="tomcat-stop">
+	    <java jar="${appserver.home}/bin/bootstrap.jar" fork="true">
+	        <jvmarg value="-Dcatalina.home=${appserver.home}"/>
+	        <arg line="stop"/>
+	    </java>
+	</target>
+	
+	<target name="tomcat-start-debug">
+	    <java jar="${appserver.home}/bin/bootstrap.jar" fork="true">
+	        <jvmarg value="-Dcatalina.home=${appserver.home}"/>
+	        <jvmarg value="-Xdebug"/>
+	        <jvmarg
+	value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>
+	    </java>
+	</target>
+
 
 <!-- End Tomcat tasks -->
 
@@ -177,7 +211,7 @@
 <!-- ============================================================== -->
 	<property name="test.dir" value="test"/>
 	        
-    <target name="buildtests" description="Compile test tree java files">
+    <target name="tests-build" description="Compile test tree java files">
         <mkdir dir="${build.dir}"/>
         <javac destdir="${build.dir}" source="1.5" target="1.5" debug="true"
             deprecation="false" optimize="false" failonerror="true">
@@ -186,7 +220,7 @@
         </javac>
     </target>
     
-    <target name="tests" depends="build, buildtests" description="Run tests">
+    <target name="tests-run" depends="app-build, tests-build" description="Run tests">
         <junit printsummary="on"
             fork="false"
             haltonfailure="false"
@@ -221,7 +255,7 @@
 <!-- Database tasks												    -->
 <!-- ============================================================== -->	
 	
-	<target name="createTables">
+	<target name="db-create-tables">
         <echo message="CREATE TABLES USING: ${db.driver} ${db.url}"/>
         <sql driver="${db.driver}"
              url="${db.url}"
@@ -233,7 +267,7 @@
         </sql> 
     </target>
 
-    <target name="dropTables">
+    <target name="db-drop-tables">
         <echo message="DROP TABLES USING: ${db.driver} ${db.url}"/>
         <sql driver="${db.driver}"
              url="${db.url}"
@@ -245,7 +279,7 @@
         </sql> 
     </target>
 
-    <target name="loadData">
+    <target name="db-load-data">
         <echo message="LOAD DATA USING: ${db.driver} ${db.url}"/>
         <sql driver="${db.driver}"
              url="${db.url}"
@@ -257,7 +291,7 @@
         </sql> 
     </target>
 
-    <target name="printData">
+    <target name="db-print-data">
         <echo message="PRINT DATA USING: ${db.driver} ${db.url}"/>
         <sql driver="${db.driver}"
              url="${db.url}"
@@ -270,7 +304,7 @@
         </sql> 
     </target>
 
-    <target name="clearData">
+    <target name="db-clear-data">
         <echo message="CLEAR DATA USING: ${db.driver} ${db.url}"/>
         <sql driver="${db.driver}"
              url="${db.url}"
@@ -282,7 +316,7 @@
         </sql> 
     </target>
 
-	<target name="startupDb">
+	<target name="db-start">
         <echo message="STARTUP DATABASE USING: ${db.driver} ${db.url}"/>
 		<java classname="org.hsqldb.Server" fork="yes">
          <arg value="-database test"/>
@@ -290,7 +324,7 @@
        </java>
     </target>
 	
-    <target name="shutdownDb">
+    <target name="db-stop">
         <echo message="SHUT DOWN DATABASE USING: ${db.driver} ${db.url}"/>
         <sql driver="${db.driver}"
              url="${db.url}"
