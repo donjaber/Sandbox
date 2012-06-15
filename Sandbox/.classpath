@@ -7,28 +7,39 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--hamcrest-core-1.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--hsqldb-1.8.0.10.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--junit-4.10.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--servlet-api-3.0-alpha-1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/maven-ant-tasks-2.1.3.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.aop-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.asm-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.aspects-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.beans-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.context-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.context.support-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.core-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.expression-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.instrument-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.instrument.tomcat-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.jdbc-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.jms-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.orm-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.oxm-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.spring-library-3.1.0.RELEASE.libd"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.test-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.transaction-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.web-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.web.portlet-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.web.servlet-3.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/org.springframework.web.struts-3.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--commons-beanutils-1.8.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--commons-digester-2.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--guava-12.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--jcl-over-slf4j-1.5.8.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--jsr305-1.3.9.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--slf4j-api-1.4.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--slf4j-log4j12-1.4.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--tiles-api-2.2.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--tiles-core-2.2.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--tiles-jsp-2.2.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--tiles-servlet-2.2.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--tiles-template-2.2.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--commons-lang-2.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-aop-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-asm-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-beans-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-context-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-context-support-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-core-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-expression-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-jdbc-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-orm-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-oxm-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-security-config-3.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-security-core-3.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-security-crypto-3.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-test-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-tx-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-web-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-webmvc-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/maven--spring-webmvc-portlet-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

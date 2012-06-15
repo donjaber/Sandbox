@@ -4,6 +4,7 @@
     <property file="build.properties"/>
 
     <property name="src.dir" value="src"/>
+	<property name="test.dir" value="test"/>
     <property name="web.dir" value="war"/>
     <property name="build.dir" value="${web.dir}/WEB-INF/classes"/>
     <property name="name" value="Sandbox"/>
@@ -51,6 +52,14 @@
         <pathelement path="${build.dir}"/>
     </path>
 
+	<path id="test-classpath">
+        <fileset dir="${web.dir}/WEB-INF/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement path="${build.dir}"/>
+        <pathelement path="${test.dir}"/>
+    </path>
+	
     <target name="usage">
         <echo message=""/>
         <echo message="${name} build file"/>
@@ -77,6 +86,11 @@
             <src path="${src.dir}"/>
             <classpath refid="master-classpath"/>
         </javac>
+    	<copy todir="${build.dir}" preservelastmodified="true">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
     </target>
 
 	<target name="app-clean" description="Clean output directories">
@@ -226,12 +240,13 @@
             haltonfailure="false"
             failureproperty="tests.failed"
             showoutput="true">
-            <classpath refid="master-classpath"/>
+        	<classpath refid="test-classpath"/>
             <formatter type="brief" usefile="false"/>
             
             <batchtest>
                 <fileset dir="${build.dir}">
                     <include name="**/*Tests.*"/>
+                	<exclude name="**/JDBC*Tests.*"/>
                 </fileset>
             </batchtest>
             
@@ -247,6 +262,33 @@
         </fail>
     </target>
 	
+	<target name="tests-db-run" depends="app-build,tests-build,db-drop-tables,db-create-tables,db-load-data" description="Run db tests">
+	        <junit printsummary="on"
+	            fork="false"
+	            haltonfailure="false"
+	            failureproperty="tests.failed"
+	            showoutput="true">
+	            <classpath refid="test-classpath"/>
+	            <formatter type="brief" usefile="false"/>
+	            
+	            <batchtest>
+	                <fileset dir="${build.dir}">
+	                    <include name="**/JDBC*Tests.*"/>
+	                </fileset>
+	            </batchtest>
+	            
+	        </junit>
+	        
+	        <fail if="tests.failed">
+	            tests.failed=${tests.failed}
+	            ***********************************************************
+	            ***********************************************************
+	            ****  One or more tests failed!  Check the output ...  ****
+	            ***********************************************************
+	            ***********************************************************
+	        </fail>
+	    </target>
+
 <!-- End JUnit tasks -->	
 	
 	

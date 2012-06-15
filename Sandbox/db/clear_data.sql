@@ -1,1 +1,1 @@
-DELETE FROM products;
+DELETE FROM people;

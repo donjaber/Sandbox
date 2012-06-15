@@ -1,0 +1,45 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security 
+                    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<global-method-security pre-post-annotations="enabled" />
+	
+	<http use-expressions="true">
+		<intercept-url pattern="page/index.jsp" access="permitAll" />
+		<intercept-url pattern="page/secure/**" access="isAuthenticated()" />
+		<intercept-url pattern="page/secure/extreme/**" access="hasRole('supervisor')" />
+		<intercept-url pattern="/**" access="denyAll" />
+		<form-login />
+		<logout />
+	</http>
+
+	<beans:bean id="encoder"
+		class="org.springframework.security.crypto.password.StandardPasswordEncoder" />
+
+	<authentication-manager>
+		<authentication-provider>
+			<password-encoder ref="encoder" />
+			<user-service>
+				<!-- Koala -->
+				<user name="rod"
+					password="864acff7515e4e419d4266e474ea14a889dce340784038b704a30453e01245eed374f881f3df8e1e"
+					authorities="supervisor, teller, user" />
+				<!-- Emu -->
+				<user name="dianne"
+					password="9992e040d32b6a688ff45b6e53fd0f5f1689c754ecf638cce5f09aa57a68be3c6dae699091e58324"
+					authorities="teller, user" />
+				<!-- Wombat -->
+				<user name="scott"
+					password="ab8d9744fa4dd5cee6eb692406fd29564267bad7c606837a70c44583b72e5684ec5f55c9dea869a5"
+					authorities="user" />
+				<!-- Opal -->
+				<user name="peter"
+					password="e446d30fcb00dc48d7e9fac49c2fec6a945171702e6822e1ec48f1ac1407902759fe30ed66a068df"
+					authorities="user" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>  

@@ -1,6 +1,9 @@
-CREATE TABLE products (
+CREATE TABLE people (
   id INTEGER NOT NULL PRIMARY KEY,
-  description varchar(255),
-  price decimal(15,2)
+  first_name varchar(50),
+  middle_name varchar(50),
+  last_name varchar(50),
+  alias_name varchar(50),
+  birthdate timestamp,
+  gender char(1)
 );
-CREATE INDEX products_description ON products(description);
